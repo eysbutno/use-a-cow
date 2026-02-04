@@ -6,15 +6,16 @@ using ll = long long;
 template <typename Info> class SegmentTree {
   private:
     const int len; 
-    vector<Info> t; 
+    std::vector<Info> t; 
     
   public:
     SegmentTree(int len) : len(len), t(2 * len) {}
-    SegmentTree(const vector<Info> &arr) 
+    SegmentTree(const std::vector<Info> &arr) 
         : len(arr.size()), t(2 * len) {
         for (int i = 0; i < len; i++) {
             t[i + len] = arr[i];
         }
+
         for (int i = len - 1; i > 0; i--) {
             t[i] = t[i << 1] + t[i << 1 | 1];
         }

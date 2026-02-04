@@ -6,14 +6,14 @@ using ll = long long;
 /**
  * LCA tree using binary lifting and stuff. 
  * Does basically everything needed. If more capability
- * is needed from the vectors, then maybe just copy the code
+ * is needed from the std::vectors, then maybe just copy the code
  * snippets.
  */
 struct LCA {
     const int n, LG;
-    const vector<vector<int>> &adj;
-    vector<vector<int>> lift;
-    vector<int> dep, tin, tout;
+    const std::vector<std::vector<int>> &adj;
+    std::vector<std::vector<int>> lift;
+    std::vector<int> dep, tin, tout;
     int timer = 0;
 
     void dfs(int u, int p) {
@@ -31,9 +31,9 @@ struct LCA {
         tout[u] = timer - 1;
     }
 
-    LCA(const vector<vector<int>> &adj) 
-        : n(adj.size()), LG(1 + __lg(n)), adj(adj),
-          lift(LG, vector<int>(n)), dep(n), tin(n), tout(n) {
+    LCA(const std::vector<std::vector<int>> &adj) 
+        : n(adj.size()), LG(1 + std::__lg(n)), adj(adj),
+          lift(LG, std::vector<int>(n)), dep(n), tin(n), tout(n) {
         dfs(0, -1);
     }
 

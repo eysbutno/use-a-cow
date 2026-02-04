@@ -63,15 +63,14 @@ vector<array<int, 2>> gen_con_graph(int n, int m) {
     assert(m >= n - 1);
     auto res = gen_tree(n);
     set<array<int, 2>> added(begin(res), end(res));
-    for (int i = 0; i < m - (n - 1); i++) {
+    while (added.size() < m) {
         int u = random(n - 1), v = random(n - 1);
         if (u > v) { swap(u, v); }
         if (u != v && !added.count({u, v})) {
             added.insert({u, v});
-            res.push_back({u, v});
         }
     }
-    return vector<array<int, 2>>(begin(res), end(res));
+    return vector<array<int, 2>>(begin(added), end(added));
 }
 
 /**

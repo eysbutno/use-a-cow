@@ -8,7 +8,7 @@ using ll = long long;
  * Can be reduced to O(n) build with O(n) init RMQ.
 */
 
-#include "RMQ1.cpp"
+#include "RMQ.cpp"
 
 struct LCA {
     const int n;

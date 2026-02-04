@@ -7,6 +7,8 @@ using ll = long long;
  * NOTE: If there is no value in the range that
  * satisfies the function, it returns an endpoint.
  * Make sure to account for this.
+ * 
+ * (alternatively, use ranges::partition_point with views::iota)
 */
 template <typename T, typename F> 
 T first_true(T lo, T hi, const F &fn) {

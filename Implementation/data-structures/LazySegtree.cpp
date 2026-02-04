@@ -17,10 +17,10 @@ template <class Info, class Tag>
 class LazySegtree {
   private:
     const int n;
-    vector<Info> t;
-    vector<Tag> lz;
+    std::vector<Info> t;
+    std::vector<Tag> lz;
        
-    void build(int v, int l, int r, const vector<Info> &a) {
+    void build(int v, int l, int r, const std::vector<Info> &a) {
         if (l == r) {
             t[v] = a[l];
         } else {
@@ -78,13 +78,13 @@ class LazySegtree {
     LazySegtree() {}
     
     LazySegtree(int n) : n(n) {
-        t.assign(4 << __lg(n), Info());
-        lz.assign(4 << __lg(n), Tag());
+        t.assign(4 << std::__lg(n), Info());
+        lz.assign(4 << std::__lg(n), Tag());
     }
 
-    LazySegtree(const vector<Info> &a) : n(a.size()) {
-        t.assign(4 << __lg(n), Info());
-        lz.assign(4 << __lg(n), Tag());
+    LazySegtree(const std::vector<Info> &a) : n(a.size()) {
+        t.assign(4 << std::__lg(n), Info());
+        lz.assign(4 << std::__lg(n), Tag());
         build(1, 0, n - 1, a);
     }
 

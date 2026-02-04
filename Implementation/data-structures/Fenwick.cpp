@@ -9,12 +9,12 @@ template<typename T> struct FT {
 
     T pre(int i) {
         T s = 0;
-        for (i++; i > 0; i -= i & -i) { s += t[i]; }
+        for (i++; i > 0; i -= i & -i) s += t[i];
         return s;
     }
 
     void upd(int i, T x) {
-        for (i++; i < n; i += i & -i) { t[i] += x; }
+        for (i++; i < n; i += i & -i) t[i] += x;
     }
 
     T qry(int l, int r) { return pre(r) - pre(l - 1); }
