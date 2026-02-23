@@ -5,9 +5,9 @@ using ll = long long;
 /**
  * Verified with Yosupo.
 */
-struct DisjointSet {
+struct disjoint_set {
     std::vector<int> e;
-    DisjointSet(int n) : e(n, -1) {}
+    disjoint_set(int n) : e(n, -1) {}
     int get(int x) { 
         return e[x] < 0 ? x : e[x] = get(e[x]); 
     }

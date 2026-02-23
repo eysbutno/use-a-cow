@@ -8,13 +8,13 @@ using ll = long long;
  * Can be reduced to O(n) build with O(n) init RMQ.
 */
 
-#include "RMQ.cpp"
+#include "data-structures/rmq.cpp"
 
-struct LCA {
+struct lca {
     const int n;
     const vector<vector<int>> &adj;
     vector<int> tin, et, dep;
-    RMQ<array<int, 2>> rmq;
+    rmq<array<int, 2>> rmq;
     int timer = 0;
 
     void dfs(int u, int p) {
@@ -27,22 +27,23 @@ struct LCA {
         }
     }
 
-    LCA(int _n, vector<vector<int>> &_adj) 
+    lca(int _n, vector<vector<int>> &_adj) 
         : n(_n), adj(_adj), tin(n), et(2 * n), dep(n) {
         dfs(0, -1);
         vector<array<int, 2>> arr(2 * n);
         for (int i = 0; i < 2 * n; i++) {
             arr[i] = {dep[et[i]], et[i]};
         }
+
         rmq.init(arr);
     }
 
-    int lca(int u, int v) const {
+    int qry(int u, int v) const {
         if (tin[u] > tin[v]) { swap(u, v); }
         return rmq.qry(tin[u], tin[v])[1];
     }
     
     int dist(int u, int v) const {
-        return dep[u] + dep[v] - 2 * dep[lca(u, v)];
+        return dep[u] + dep[v] - 2 * dep[qry(u, v)];
     }
 };

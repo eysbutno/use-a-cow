@@ -3,12 +3,12 @@
 using ll = long long;
 
 template <typename T, typename F> 
-struct SparseTable {
+struct sparse_table {
     const int n; 
     const F join;
     std::vector<std::vector<T>> st;
     
-    SparseTable(const std::vector<T> &a, const F &f) 
+    sparse_table(const std::vector<T> &a, const F &f) 
                : n(a.size()), join(f) {
         int max_log = 1 + std::__lg(n);
         st.resize(max_log);

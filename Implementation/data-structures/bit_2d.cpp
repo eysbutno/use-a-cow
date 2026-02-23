@@ -2,13 +2,13 @@
 
 using ll = long long;
 
-template <typename T> class Fenwick2D {
+template <typename T> class bit_2d {
   private:
     const int n, m;
     std::vector<std::vector<T>> arr;
 
   public:
-    Fenwick2D(int _n, int _m) : n(_n), m(_m), arr(n + 1, vector<T>(m + 1)) {}
+    bit_2d(int _n, int _m) : n(_n), m(_m), arr(n + 1, vector<T>(m + 1)) {}
     
     /** adds val to location (r, c) */
     void add(int r, int c, T val) {

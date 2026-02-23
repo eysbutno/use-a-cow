@@ -12,7 +12,7 @@ ll modpow(ll x, ll n, ll m = MOD) {
     return res;
 }
 
-namespace Combo {
+namespace combo {
     std::vector<ll> fact, inv;
 
     void init(int n) {

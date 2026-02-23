@@ -2,10 +2,10 @@
 
 using ll = long long;
 
-template<typename T> struct FT {
+template<typename T> struct bit {
     const int n; 
     std::vector<T> t;
-    FT(int _n) : n(_n + 1), t(n) {}
+    bit(int _n) : n(_n + 1), t(n) {}
 
     T pre(int i) {
         T s = 0;

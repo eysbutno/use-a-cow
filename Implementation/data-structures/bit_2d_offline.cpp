@@ -7,7 +7,7 @@ using ll = long long;
  * Note that n needs to be of a reasonable size, and
  * all the updates/queries inputs are zero indexed.
  */
-template <typename T> class OfflineFenwick2D {
+template <typename T> class bit_2d_offline {
   private:
     const int n;
     std::vector<std::vector<int>> vals;
@@ -18,7 +18,7 @@ template <typename T> class OfflineFenwick2D {
     }
 
   public:
-    OfflineFenwick2D(int _n, std::vector<std::array<int, 2>> &todo)
+    bit_2d_offline(int _n, std::vector<std::array<int, 2>> &todo)
         : n(_n), vals(n + 1), arr(n + 1) {
         std::sort(std::begin(todo), std::end(todo), 
             [](const auto &a, const auto &b) -> bool {

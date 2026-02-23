@@ -3,14 +3,14 @@ using namespace std;
 
 using ll = long long;
 
-template <typename Info> class SegmentTree {
+template <typename info> class segtree {
   private:
     const int len; 
-    std::vector<Info> t; 
+    std::vector<info> t; 
     
   public:
-    SegmentTree(int len) : len(len), t(2 * len) {}
-    SegmentTree(const std::vector<Info> &arr) 
+    segtree(int len) : len(len), t(2 * len) {}
+    segtree(const std::vector<info> &arr) 
         : len(arr.size()), t(2 * len) {
         for (int i = 0; i < len; i++) {
             t[i + len] = arr[i];
@@ -21,15 +21,15 @@ template <typename Info> class SegmentTree {
         }
     }
 
-    void set(int idx, Info val) {
+    void set(int idx, info val) {
         for (t[idx += len] = val; idx >>= 1; ) {
             t[idx] = t[idx << 1] + t[idx << 1 | 1];
         }
     }
 
     /** @return query on [l, r) */
-    Info qry(int l, int r) {
-        Info res_l = Info(), res_r = Info();
+    info qry(int l, int r) {
+        info res_l = info(), res_r = info();
         for (l += len, r += len; l < r; l >>= 1, r >>= 1) {
             if (l & 1) { res_l = res_l + t[l++]; }
             if (r & 1) { res_r = t[--r] + res_r; }
@@ -38,16 +38,16 @@ template <typename Info> class SegmentTree {
     }
     
     /** @return value at location idx */
-    Info get(int idx) {
+    info get(int idx) {
         return t[idx + len];
     }
 };
 
-struct Info {
+struct info {
 
 };
 
 /** @return result of joining nodes a and b together */
-Info operator+(const Info &a, const Info &b) {
+info operator+(const info &a, const info &b) {
     
 }

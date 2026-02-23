@@ -7,11 +7,12 @@ using ll = long long;
  * Stolen from Benq. To get the component
  * of node i, do scc.comp[node]
  */
-struct SCC {
+struct scc {
 	int n, ti = 0;
 	const vector<vector<int>> &adj;
 	vector<int> disc, comp, st, comps;
-	SCC(const vector<vector<int>> &_adj)
+
+	scc(const vector<vector<int>> &_adj)
 		: n((int) _adj.size()), adj(_adj), disc(n), comp(n, -1) {
 		for (int i = 0; i < n; i++) {
 			if (!disc[i]) { dfs(i); }
@@ -36,5 +37,5 @@ struct SCC {
 		return low;
 	}
 
-	inline int id(int x) { return comp[x]; }
+	int id(int x) { return comp[x]; }
 };

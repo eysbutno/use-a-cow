@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
-#include "ModIntShort.cpp"
+#include "modint.cpp"
 
 constexpr int MOD = 998244353;
 using Z = mint<MOD>;
 
-namespace Combo {
+namespace combo {
     std::vector<Z> fact, inv;
 
     void init(int n) {

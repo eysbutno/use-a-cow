@@ -5,7 +5,7 @@ using ll = long long;
 /**
  * Stolen from jiangly. Made some edits.
  */
-namespace Sieve {
+namespace sieve {
 	std::vector<int> minp, primes;
 	void init(int n) {
 		minp.resize(n + 1);

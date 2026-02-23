@@ -6,7 +6,7 @@ using ll = long long;
  * <O(n log n), O(1)> RMQ implementation. Some stuff is
  * borrowed from tourist.
 */
-template <class T> struct RMQ {
+template <class T> struct rmq {
     int n; 
     std::vector<std::vector<T>> st;
     

@@ -11,7 +11,7 @@ using linear = std::array<T, 2>;
 
 constexpr ld eps = 1e-7; // change if needed
 
-namespace Geo {
+namespace geo_primitive {
     T dot(const vec &a, const vec &b) {
         return a[0] * b[0] + a[1] * b[1];
     }

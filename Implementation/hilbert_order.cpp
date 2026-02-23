@@ -2,7 +2,11 @@
 
 using ll = long long;
 
-ll hilbertorder(int x, int y) {
+/**
+ * Hilbert Ordering for Mo's algorithm. Supposedly
+ * provides better sorting orders for less pointer moves.
+ */
+ll hilbert_order(int x, int y) {
     const int logn = std::__lg(std::max(x, y) * 2 + 1) | 1;
     const ll maxn = (1ll << logn) - 1;
     ll res = 0;

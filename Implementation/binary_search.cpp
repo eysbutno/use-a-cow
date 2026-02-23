@@ -12,15 +12,20 @@ using ll = long long;
 */
 template <typename T, typename F> 
 T first_true(T lo, T hi, const F &fn) {
+    hi++;
+    
     while (lo < hi) {
         T m = lo + (hi - lo) / 2;
         fn(m) ? hi = m : lo = m + 1;
     }
+
     return lo;
 }
 
 template <typename T, typename F> 
 T last_true(T lo, T hi, const F &fn) {
+    lo--;
+
     while (lo < hi) {
         T m = lo + (hi - lo + 1) / 2;
         fn(m) ? lo = m : hi = m - 1;

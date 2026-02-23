@@ -4,7 +4,7 @@ using ll = long long;
 
 // call IO::init() at the start, and call
 // IO::_flush_output() at the end.
-namespace IO {
+namespace fast_io {
     const int BUFFER_SIZE = 1 << 15;
  
     char input_buffer[BUFFER_SIZE];

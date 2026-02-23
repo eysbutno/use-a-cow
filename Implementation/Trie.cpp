@@ -9,20 +9,20 @@ using ll = long long;
  * Binary trie is basically the same thing, just
  * change up some stuff.
  */
-struct TrieNode {
+struct node {
 	int cnt = 0;
-	std::array<TrieNode*, 26> ch;
+	std::array<node*, 26> ch;
 };
 
-TrieNode* new_node() {
-	TrieNode* cur = new TrieNode;
+node* new_node() {
+	node* cur = new node;
 	(cur -> ch).fill(nullptr);
 	return cur;
 }
 
-TrieNode* root = new_node();
+node* root = new_node();
 void insert(const std::string &s) {
-	TrieNode* cur = root;
+	node* cur = root;
 	for (int i = 0; i < s.size(); i++) {
 		int x = s[i] - 'a';
 		if ((cur -> ch)[x] == nullptr) {

@@ -6,7 +6,7 @@ using ll = long long;
  * Faster, more lightweight string hashing
  * template. Taken from USACO Guide, with some edits.
  */
-class HashedString {
+class hashed_string {
   private:
 	static const ll M = 1e9 + 9;
 	static const ll B;
@@ -14,8 +14,8 @@ class HashedString {
 	std::vector<ll> p_hash;
 
   public:
-	HashedString() {}
-	HashedString(const std::string &s) : p_hash(s.size() + 1) {
+	hashed_string() {}
+	hashed_string(const std::string &s) : p_hash(s.size() + 1) {
 		while (pow.size() <= s.size()) { 
             pow.push_back((pow.back() * B) % M); 
         }
@@ -33,6 +33,6 @@ class HashedString {
 	}
 };
 
-std::vector<ll> HashedString::pow = {1};
+std::vector<ll> hashed_string::pow = {1};
 std::mt19937 rng((uint32_t)std::chrono::steady_clock::now().time_since_epoch().count());
-const ll HashedString::B = std::uniform_int_distribution<ll>(0, M - 1)(rng);
+const ll hashed_string::B = std::uniform_int_distribution<ll>(0, M - 1)(rng);

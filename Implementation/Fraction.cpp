@@ -5,8 +5,10 @@ using ll = long long;
 /**
  * Concise fraction template. Requires C++ 20. 
  */
-template<class T> struct Fraction {
+template<class T> struct fraction {
     T top = 0, bot = 1;
+
+    fraction(T _top, T _bot) : top(_top), bot(_bot) {}
 
     auto operator<=>(const Fraction &o) const {
         return (top * o.bot) <=> (o.top * bot);
