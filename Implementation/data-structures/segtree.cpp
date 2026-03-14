@@ -5,10 +5,11 @@ using ll = long long;
 
 template <typename info> class segtree {
   private:
-    const int len; 
+    int len; 
     std::vector<info> t; 
     
   public:
+    segtree() {}
     segtree(int len) : len(len), t(2 * len) {}
     segtree(const std::vector<info> &arr) 
         : len(arr.size()), t(2 * len) {
