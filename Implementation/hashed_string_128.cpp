@@ -21,7 +21,7 @@ struct hashed_string {
 
     hashed_string() {}
 	hashed_string(const std::string &s) : p_hash(s.size() + 1) {
-		while (pow.size() < s.size()) { pow.push_back(mod_mul(pow.back(), B)); }
+		while (pow.size() <= s.size()) { pow.push_back(mod_mul(pow.back(), B)); }
 		p_hash[0] = 0;
 		for (int i = 0; i < (int) s.size(); i++) {
 			p_hash[i + 1] = (mul(p_hash[i], B) + s[i]) % M;
@@ -39,7 +39,7 @@ struct hashed_string {
 
 	/** @return len of LCP, starting from st_1 and st_2 for each str */
     int lcp(hashed_string &other, int st_1 = 0, int st_2 = 0) {
-        int lo = -1, hi = std::min(size() - st_1, other.size() - st_2);
+        int lo = -1, hi = std::min(size() - st_1, other.size() - st_2) - 1;
         while (lo < hi) {
             int mi = (lo + hi + 1) / 2;
             ll pf_1 = get_hash(st_1, st_1 + mi);

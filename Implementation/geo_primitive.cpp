@@ -64,13 +64,6 @@ namespace geo_primitive {
                sign(orient(c, d, a)) * sign(orient(c, d, b)) < 0;
     }
 
-    pt get_intersect(const line &l1, const line &l2) {
-        const auto &[a, b] = l1;
-        const auto &[c, d] = l2;
-
-        return intersect(make_linear(l1), make_linear(l2));
-    }
-
     T dist(const pt &a, const pt &b) {
         const T dx = std::abs(a[0] - b[0]);
         const T dy = std::abs(a[1] - b[1]);
@@ -126,6 +119,13 @@ namespace geo_primitive {
         }
 
         return std::abs(res) / 2;
+    }
+
+    pt get_intersect(const line &l1, const line &l2) {
+        const auto &[a, b] = l1;
+        const auto &[c, d] = l2;
+
+        return intersect(make_linear(l1), make_linear(l2));
     }
 
     std::vector<pt> convex_hull(std::vector<pt> locs) {

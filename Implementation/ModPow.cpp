@@ -4,10 +4,10 @@ using namespace std;
 using ll = long long;
 
 /** @return x^n % m */
-ll modpow(ll x, ll n, ll m) {
-    ll res = 1;
-    for (x %= m; n; n >>= 1, (x *= x) %= m) {
-        if (n & 1) (res *= x) %= m;
+int modpow(int x, ll n, int m) {
+    ll res = 1, b = x % m;
+    for (; n; n >>= 1, b = b * b % m) {
+        if (n & 1) res = res * b % m;
     }
-    return res;
+    return (int)res;
 }
