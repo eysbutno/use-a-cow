@@ -6,12 +6,14 @@ using ll = long long;
  * https://codeforces.com/blog/entry/111371
  * 
  * Derived from this tutorial. Mildly scuffed.
+ * 
+ * NOTE: If using split FFT, MUST use long double
  */
 
-using c_t = std::complex<double>;
+using c_t = std::complex<long double>;
 using namespace std::complex_literals;
 
-const double PI = std::acos(-1.0);
+const long double PI = acosl(-1.0L);
 
 /**
  * A TL;DR of DFT, so I don't forget:
@@ -38,7 +40,15 @@ void dft(std::vector<c_t> &a) {
     const int n = a.size();
     assert((n & (n - 1)) == 0);
 
-    // 1. bit-reversal permutation (in place via swaps)
+    static std::vector<c_t> rt{1, 1};
+    while (rt.size() < n) {
+        int h = rt.size();
+        rt.resize(2 * h);
+        for (int k = 0; k < h; k++) {
+            rt[h + k] = std::polar(1.0L, PI * k / h);
+        }
+    }
+
     for (int i = 1, j = 0; i < n; i++) {
         int bit = n >> 1;
         for (; j & bit; bit >>= 1) j ^= bit;
@@ -46,20 +56,14 @@ void dft(std::vector<c_t> &a) {
         if (i < j) std::swap(a[i], a[j]);
     }
 
-    // 2. butterflies, bottom-up
     for (int len = 2; len <= n; len <<= 1) {
-        const c_t w = std::polar(1.0, 2 * PI / len); // same + convention as yours
+        const int h = len / 2;
         for (int i = 0; i < n; i += len) {
-            // c_t w_k = 1;
-            for (int k = 0; k < len / 2; k++) {
-                // calculate w_k each time, cuz of floating point error
-                c_t w_k = std::polar(1.0, 2 * PI * k / len);
-
+            for (int k = 0; k < h; k++) {
                 c_t u = a[i + k];
-                c_t v = w_k * a[i + k + len / 2];
-                a[i + k]           = u + v;
-                a[i + k + len / 2] = u - v;
-                // w_k *= w;
+                c_t v = rt[h + k] * a[i + k + h];
+                a[i + k] = u + v;
+                a[i + k + h] = u - v;
             }
         }
     }
@@ -75,7 +79,7 @@ void dft(std::vector<c_t> &a) {
  * - So we can pretty easily get our coeffients of c by performing DFT on 
  *   the inferred DFT of a * b
  */
-std::vector<c_t> fft(std::vector<c_t> a, std::vector<c_t> b) {
+std::vector<c_t> conv(std::vector<c_t> a, std::vector<c_t> b) {
     // lol yosupo RTEs me if I don't have this
     if (a.size() == 1 && b.size() == 1) {
         return std::vector<c_t>{a[0] * b[0]};
@@ -95,8 +99,40 @@ std::vector<c_t> fft(std::vector<c_t> a, std::vector<c_t> b) {
 
     dft(c);
     std::reverse(c.begin() + 1, c.end());
-    for (c_t &i : c) i /= double(sz);
+    for (c_t &i : c) i /= (long double) sz;
 
     c.resize(res_sz);
     return c;
+}
+
+template <int M> std::vector<int> conv_mod(const std::vector<int>& a, const std::vector<int>& b) {
+    const int n = a.size();
+    const int m = b.size();
+    const int sz = n + m - 1;
+    std::vector<c_t> lo_a(n), hi_a(n), lo_b(m), hi_b(m);
+    for (int i = 0; i < n; i++) {
+        lo_a[i] = a[i] & ((1 << 15) - 1);
+        hi_a[i] = a[i] >> 15;
+    }
+    for (int i = 0; i < m; i++) {
+        lo_b[i] = b[i] & ((1 << 15) - 1);
+        hi_b[i] = b[i] >> 15;
+    }
+
+    auto c_ll = conv(lo_a, lo_b);
+    auto c_lh = conv(lo_a, hi_b);
+    auto c_hl = conv(hi_a, lo_b);
+    auto c_hh = conv(hi_a, hi_b);
+
+    const ll m15 = (1 << 15) % M;
+    const ll m30 = (1ll << 30) % M;
+    std::vector<int> res(sz);
+    for (int i = 0; i < sz; i++) {
+        ll v_ll = (ll) std::llround(c_ll[i].real()) % M;
+        ll v_mid = (std::llround(c_lh[i].real()) + std::llround(c_hl[i].real())) % M;
+        ll v_hh = (ll) std::llround(c_hh[i].real()) % M;
+        res[i] = (v_ll + v_mid * m15 + v_hh * m30) % M;
+    }
+
+    return res;
 }
