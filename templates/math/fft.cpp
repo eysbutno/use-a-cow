@@ -7,10 +7,11 @@ using ll = long long;
  * 
  * Derived from this tutorial. Mildly scuffed.
  * 
- * NOTE: If using split FFT, MUST use long double
+ * Proof of AC: https://judge.yosupo.jp/submission/418040
+ * (With Pragmas: https://judge.yosupo.jp/submission/418043)
  */
 
-using c_t = std::complex<long double>;
+using c_t = std::complex<double>;
 using namespace std::complex_literals;
 
 const long double PI = acosl(-1.0L);
@@ -40,12 +41,13 @@ void dft(std::vector<c_t> &a) {
     const int n = a.size();
     assert((n & (n - 1)) == 0);
 
-    static std::vector<c_t> rt{1, 1};
+    static std::vector<c_t> rt{1.0, 1.0};
     while (rt.size() < n) {
         int h = rt.size();
         rt.resize(2 * h);
         for (int k = 0; k < h; k++) {
-            rt[h + k] = std::polar(1.0L, PI * k / h);
+            // computed in long double, rounded to double once on store
+            rt[h + k] = c_t(std::polar(1.0L, PI * k / h));
         }
     }
 
@@ -99,39 +101,72 @@ std::vector<c_t> conv(std::vector<c_t> a, std::vector<c_t> b) {
 
     dft(c);
     std::reverse(c.begin() + 1, c.end());
-    for (c_t &i : c) i /= (long double) sz;
+    for (c_t &i : c) i /= (double) sz;
 
     c.resize(res_sz);
     return c;
 }
 
+/**
+ * We observe that:
+ * - DFT(a + b) = DFT(a) + DFT(b) 
+ * - FFT(a) only has real values as its output
+ * 
+ * So basically if we pack info into the complex, it will be returned into the 
+ * complex once we are done with everything! This gets us down from 12 to 6 DFTs.
+ * 
+ * For a DFT on integer array x, x[-k] = conj(x[k]) and vice versa (mod size),
+ * to do so you just expand it out and utilize the fact that w^-1 = conj(w).
+ * 
+ * If we pack z[i] = x[i] + iy[i], then Z[i] = X[i] + iY[i].
+ * conj(Z[-k]) = conj(X[-k]) + conj(iY[-k]) = X[k] + conj(i)Y[k] = X[k] - iY[k].
+ */
 template <int M> std::vector<int> conv_mod(const std::vector<int>& a, const std::vector<int>& b) {
     const int n = a.size();
     const int m = b.size();
-    const int sz = n + m - 1;
-    std::vector<c_t> lo_a(n), hi_a(n), lo_b(m), hi_b(m);
+    int sz = 1;
+    while (sz < n + m - 1) sz *= 2;
+
+    // pack a_c[i] = lo_15_a[i] + i * hi_15_a[i]
+    std::vector<c_t> a_c(sz);
     for (int i = 0; i < n; i++) {
-        lo_a[i] = a[i] & ((1 << 15) - 1);
-        hi_a[i] = a[i] >> 15;
+        a_c[i] = c_t(a[i] & ((1 << 15) - 1), a[i] >> 15);
     }
+
+    // do same thing for b_c
+    std::vector<c_t> b_c(sz);
     for (int i = 0; i < m; i++) {
-        lo_b[i] = b[i] & ((1 << 15) - 1);
-        hi_b[i] = b[i] >> 15;
+        b_c[i] = c_t(b[i] & ((1 << 15) - 1), b[i] >> 15);
     }
 
-    auto c_ll = conv(lo_a, lo_b);
-    auto c_lh = conv(lo_a, hi_b);
-    auto c_hl = conv(hi_a, lo_b);
-    auto c_hh = conv(hi_a, hi_b);
+    dft(a_c), dft(b_c);
 
-    const ll m15 = (1 << 15) % M;
-    const ll m30 = (1ll << 30) % M;
-    std::vector<int> res(sz);
+    std::vector<c_t> sl(sz), sh(sz);
     for (int i = 0; i < sz; i++) {
-        ll v_ll = (ll) std::llround(c_ll[i].real()) % M;
-        ll v_mid = (std::llround(c_lh[i].real()) + std::llround(c_hl[i].real())) % M;
-        ll v_hh = (ll) std::llround(c_hh[i].real()) % M;
-        res[i] = (v_ll + v_mid * m15 + v_hh * m30) % M;
+        int r = -i & (sz - 1); // (sz - i) mod sz
+        auto al = (a_c[i] + std::conj(a_c[r])) / 2.0;
+        auto bl = (b_c[i] + std::conj(b_c[r])) / 2.0;
+        auto ah = (a_c[i] - std::conj(a_c[r])) / 2.0 * -1.0i;
+        auto bh = (b_c[i] - std::conj(b_c[r])) / 2.0 * -1.0i;
+
+        sl[i] = al * bl + 1.0i * al * bh;
+        sh[i] = ah * bl + 1.0i * ah * bh;
+    }
+
+    dft(sl), dft(sh);
+    std::reverse(sl.begin() + 1, sl.end());
+    std::reverse(sh.begin() + 1, sh.end());
+
+    std::vector<int> res(n + m - 1);
+    const ll m15 = (1 << 15) % M, m30 = (1 << 30) % M;
+    for (int i = 0; i < res.size(); i++) {
+        sl[i] /= sz;
+        sh[i] /= sz;
+        ll c_ll = std::llround(sl[i].real());
+        ll c_lh = std::llround(sl[i].imag());
+        ll c_hl = std::llround(sh[i].real());
+        ll c_hh = std::llround(sh[i].imag());
+        res[i] = (c_ll % M + m15 * ((c_lh + c_hl) % M) + m30 * (c_hh % M)) % M;
     }
 
     return res;

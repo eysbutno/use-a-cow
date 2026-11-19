@@ -3,6 +3,8 @@
 using ll = long long;
 
 /**
+ * Proof of AC: https://judge.yosupo.jp/submission/417123
+ * 
  * TL;DR of NTT: literally just FFT,
  * but instead of complex numbers being our group,
  * we have integers mod M as it. 

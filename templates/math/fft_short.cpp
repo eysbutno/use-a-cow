@@ -6,6 +6,13 @@ using c_t = std::complex<double>;
 
 const ld PI = std::acos(-1.0L);
 
+/**
+ * Proof of AC: https://judge.yosupo.jp/submission/418045
+ * 
+ * A relatively short and intuitive FFT implementation. It's like
+ * 5x slower than my fast one, but is probably fast enough for most problems.
+ */
+
 void dft(std::vector<c_t> &v) {
     if (v.size() == 1) return;
     const int m = v.size();
